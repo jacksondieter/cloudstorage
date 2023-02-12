@@ -44,4 +44,14 @@ public class Note {
     public void setUserid(Integer userid) {
         this.userid = userid;
     }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "noteid=" + noteid +
+                ", notetitle='" + notetitle + '\'' +
+                ", notedescription='" + notedescription + '\'' +
+                ", userid=" + userid +
+                '}';
+    }
 }
