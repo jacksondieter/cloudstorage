@@ -21,6 +21,9 @@ class CloudStorageApplicationTests {
 
 	private WebDriver driver;
 
+	public String baseURL;
+	private WebDriverWait wait;
+
 	@BeforeAll
 	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
@@ -29,6 +32,8 @@ class CloudStorageApplicationTests {
 	@BeforeEach
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
+		baseURL = "http://localhost:" + this.port;
+		this.wait = new WebDriverWait(driver, 2);
 	}
 
 	@AfterEach
@@ -36,11 +41,14 @@ class CloudStorageApplicationTests {
 		if (this.driver != null) {
 			driver.quit();
 		}
+		if(this.wait != null){
+			wait = null;
+		}
 	}
 
 	@Test
 	public void getLoginPage() {
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(baseURL + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
@@ -53,7 +61,7 @@ class CloudStorageApplicationTests {
 
 		// Visit the sign-up page.
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-		driver.get("http://localhost:" + this.port + "/signup");
+		driver.get(baseURL + "/signup");
 		webDriverWait.until(ExpectedConditions.titleContains("Sign Up"));
 		
 		// Fill out credentials
@@ -82,11 +90,12 @@ class CloudStorageApplicationTests {
 		WebElement buttonSignUp = driver.findElement(By.id("buttonSignUp"));
 		buttonSignUp.click();
 
-		/* Check that the sign up was successful. 
+		/* Check that the signup was successful.
 		// You may have to modify the element "success-msg" and the sign-up 
 		// success message below depening on the rest of your code.
 		*/
-		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogin")));
+		Assertions.assertTrue(driver.findElement(By.id("successMsg")).getText().contains("You successfully signed up!"));
 	}
 
 	
@@ -98,7 +107,7 @@ class CloudStorageApplicationTests {
 	private void doLogIn(String userName, String password)
 	{
 		// Log in to our dummy account.
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(baseURL + "/login");
 		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
@@ -111,8 +120,8 @@ class CloudStorageApplicationTests {
 		loginPassword.click();
 		loginPassword.sendKeys(password);
 
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
-		WebElement loginButton = driver.findElement(By.id("login-button"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogin")));
+		WebElement loginButton = driver.findElement(By.id("buttonLogin"));
 		loginButton.click();
 
 		webDriverWait.until(ExpectedConditions.titleContains("Home"));
@@ -134,8 +143,8 @@ class CloudStorageApplicationTests {
 	public void testRedirection() {
 		// Create a test account
 		doMockSignUp("Redirection","Test","RT","123");
-		
-		// Check if we have been redirected to the log in page.
+
+		// Check if we have been redirected to the login page.
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
 	}
 
@@ -158,7 +167,7 @@ class CloudStorageApplicationTests {
 		doLogIn("UT", "123");
 		
 		// Try to access a random made-up URL.
-		driver.get("http://localhost:" + this.port + "/some-random-page");
+		driver.get(baseURL + "/some-random-page");
 		Assertions.assertFalse(driver.getPageSource().contains("Whitelabel Error Page"));
 	}
 
@@ -198,6 +207,105 @@ class CloudStorageApplicationTests {
 		}
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 
+	}
+
+	private void signupPageActions(String username,String password){
+		wait = new WebDriverWait(driver, 2);
+		driver.get(baseURL + "/signup");
+		wait.until(ExpectedConditions.titleContains("Sign Up"));
+		SignupPage signuppage = new SignupPage(driver);
+		signuppage.signupUser("URL","Test",username,password);
+		wait.until(ExpectedConditions.titleContains("Login"));
+		LoginPage loginPage = new LoginPage(driver);
+		Assertions.assertTrue(loginPage.getSuccessAlert().contains("You successfully signed up!"));
+	}
+
+	private void loginPageActions(String username, String password){
+		driver.get(baseURL + "/login");
+		wait.until(ExpectedConditions.titleContains("Login"));
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.loginUser(username,password);
+		wait.until(ExpectedConditions.titleContains("Home"));
+	}
+
+	@Test
+	public void testNotesCreation(){
+		String username = "NOTE";
+		String password = "123";
+		String title= "New note";
+		String description ="Description for new note";
+		String titleToEdit= "Edited note";
+		String descriptionToEdit ="Description for edited note";
+		signupPageActions(username,password);
+		loginPageActions(username,password);
+		HomePage homePage = new HomePage(driver);
+		ResultPage resultPage = new ResultPage(driver);
+
+		homePage.navigateToNote();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.noteTable))));
+		homePage.addNoteClick();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.noteModal))));
+		homePage.addNote(title,description);
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+
+		homePage.navigateToNote();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.noteTable))));
+		homePage.editNoteClick();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.noteModal))));
+		homePage.addNote(titleToEdit,descriptionToEdit);
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+
+		homePage.navigateToNote();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.noteTable))));
+		homePage.deleteNoteClick();
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+	}
+
+	@Test
+	public void testCredentialCreation(){
+		String username = "CRED";
+		String password = "123";
+		String url= "http://example.com";
+		String usernameCredential = "doe";
+		String passwordCredential ="JohnDoe";
+		String url2= "http://example.org";
+		String usernameCredential2 = "does";
+		String passwordCredential2 ="JaneDoe";
+		signupPageActions(username,password);
+		loginPageActions(username,password);
+		HomePage homePage = new HomePage(driver);
+		ResultPage resultPage = new ResultPage(driver);
+
+		homePage.navigateToCredentials();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialTable))));
+		homePage.addCredentialClick();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialModal))));
+		homePage.addCredential(url,usernameCredential,passwordCredential);
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+
+		homePage.navigateToCredentials();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialTable))));
+		homePage.editCredentialClick();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialModal))));
+		homePage.addCredential(url,usernameCredential,passwordCredential);
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+
+		homePage.navigateToNote();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialTable))));
+		homePage.deleteCredentialClick();
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
 	}
 
 

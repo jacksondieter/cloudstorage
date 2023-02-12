@@ -26,7 +26,6 @@ public class UserService {
     }
 
     public String authenticateUser(String username, String password){
-        System.out.println(userMapper.getUsers());
         User user = userMapper.getUser(username);
         if(user == null) return "ERROR_USER";
         String encodedSalt = user.getSalt();

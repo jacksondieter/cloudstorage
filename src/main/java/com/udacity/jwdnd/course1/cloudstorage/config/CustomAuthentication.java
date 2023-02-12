@@ -23,7 +23,7 @@ private final UserService userService;
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         String auth = userService.authenticateUser(username,password);
-        System.out.println(username + " - "+password + " - " + auth);
+        System.out.println(username + " - " + auth);
         if (auth.equals("AUTH_VALID")) {
                 return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
         }
