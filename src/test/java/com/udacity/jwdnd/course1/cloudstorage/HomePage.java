@@ -56,7 +56,7 @@ public class HomePage {
 
     @FindBy(id = "credential-password")
     private WebElement credentialPasswordField;
-    @FindBy(id = "credentialSubmit")
+    @FindBy(id = "credentialSubmitButton")
     private WebElement credentialSubmitButton;
 
     public final String fileTable = "fileTable";
@@ -88,7 +88,9 @@ public class HomePage {
         deleteNoteButton.click();
     }
     public void addNote(String title, String description){
+        noteTitleField.clear();
         noteTitleField.sendKeys(title);
+        noteDescriptionField.clear();
         noteDescriptionField.sendKeys(description);
         noteSubmitButton.click();
     }
@@ -108,7 +110,9 @@ public class HomePage {
     }
     public void addCredential(String url, String username, String password){
         credentialUrlField.sendKeys(url);
+        credentialUsernameField.clear();
         credentialUsernameField.sendKeys(username);
+        credentialPasswordField.clear();
         credentialPasswordField.sendKeys(password);
         credentialSubmitButton.click();
     }

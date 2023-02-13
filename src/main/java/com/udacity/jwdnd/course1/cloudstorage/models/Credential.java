@@ -8,7 +8,7 @@ public class Credential {
     private String password;
     private Integer userid;
 
-    public Credential(Integer credentialid, String url, String username, String key, String password, Integer userid) {
+    public Credential(Integer credentialid, String url, String username, String password, String key, Integer userid) {
         this.credentialid = credentialid;
         this.url = url;
         this.username = username;
@@ -63,5 +63,16 @@ public class Credential {
 
     public void setUserid(Integer userid) {
         this.userid = userid;
+    }
+
+    @Override
+    public String toString() {
+        return "Credential{" +
+                "credentialid=" + credentialid +
+                ", url='" + url + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", key='" + key + '\'' +
+                '}';
     }
 }

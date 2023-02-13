@@ -275,7 +275,7 @@ class CloudStorageApplicationTests {
 		String usernameCredential = "doe";
 		String passwordCredential ="JohnDoe";
 		String url2= "http://example.org";
-		String usernameCredential2 = "does";
+		String usernameCredential2 = "jane";
 		String passwordCredential2 ="JaneDoe";
 		signupPageActions(username,password);
 		loginPageActions(username,password);
@@ -295,12 +295,12 @@ class CloudStorageApplicationTests {
 		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialTable))));
 		homePage.editCredentialClick();
 		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialModal))));
-		homePage.addCredential(url,usernameCredential,passwordCredential);
+		homePage.addCredential(url2,usernameCredential2,passwordCredential2);
 		wait.until(ExpectedConditions.titleContains("Result"));
 		resultPage.navigateToHomeFromSuccess();
 		wait.until(ExpectedConditions.titleContains("Home"));
 
-		homePage.navigateToNote();
+		homePage.navigateToCredentials();
 		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.credentialTable))));
 		homePage.deleteCredentialClick();
 		wait.until(ExpectedConditions.titleContains("Result"));

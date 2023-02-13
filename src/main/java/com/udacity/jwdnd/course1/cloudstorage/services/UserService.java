@@ -11,10 +11,12 @@ import java.util.Base64;
 public class UserService {
     private final UserMapper userMapper;
     private final HashService hashService;
+    private final EncryptionService encryptionService;
 
-    public UserService(UserMapper userMapper, HashService hashService) {
+    public UserService(UserMapper userMapper, HashService hashService, EncryptionService encryptionService) {
         this.userMapper = userMapper;
         this.hashService = hashService;
+        this.encryptionService = encryptionService;
     }
 
     public User getUser(String username) {
@@ -37,10 +39,7 @@ public class UserService {
     }
 
     public int createUser(User user){
-        SecureRandom random= new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        String encodedSalt = Base64.getEncoder().encodeToString(salt);
+        String encodedSalt = encryptionService.createKey();
         String hashedPassword = hashService.getHashedValue(user.getPassword(),encodedSalt);
         return userMapper.insert(new User(null,user.getUsername(),hashedPassword,user.getFirstname(),user.getLastname(),encodedSalt));
     }
