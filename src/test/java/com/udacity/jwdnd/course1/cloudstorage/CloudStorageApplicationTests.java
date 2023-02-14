@@ -307,8 +307,7 @@ class CloudStorageApplicationTests {
 	public void testFilesCreation() {
 		String username = "FL";
 		String password = "123";
-		String fileName = "syllabus.pdf";
-		String fileNameBig = "upload5m.zip";
+		String fileName = "syllabus.zip";
 
 		signupPageActions(username, password);
 		loginPageActions(username, password);
@@ -318,12 +317,7 @@ class CloudStorageApplicationTests {
 		homePage.navigateToFile();
 		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.fileTable))));
 		homePage.uploadFile(fileName);
-//		try {
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("success")));
-//		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("alertError")));
-//		} catch (org.openqa.selenium.TimeoutException e) {
-//			System.out.println("Large File upload failed");alertError
-//		}
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 		wait.until(ExpectedConditions.titleContains("Result"));
 		resultPage.navigateToHomeFromSuccess();
