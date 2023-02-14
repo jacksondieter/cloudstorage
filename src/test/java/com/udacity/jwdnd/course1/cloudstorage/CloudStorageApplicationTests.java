@@ -3,7 +3,6 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -200,11 +199,8 @@ class CloudStorageApplicationTests {
 
 		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
 		uploadButton.click();
-		try {
-			webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("success")));
-		} catch (org.openqa.selenium.TimeoutException e) {
-			System.out.println("Large File upload failed");
-		}
+		webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("alertError")));
+
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 
 	}
@@ -307,7 +303,33 @@ class CloudStorageApplicationTests {
 		resultPage.navigateToHomeFromSuccess();
 		wait.until(ExpectedConditions.titleContains("Home"));
 	}
+	@Test
+	public void testFilesCreation() {
+		String username = "FL";
+		String password = "123";
+		String fileName = "syllabus.pdf";
+		String fileNameBig = "upload5m.zip";
 
+		signupPageActions(username, password);
+		loginPageActions(username, password);
+		HomePage homePage = new HomePage(driver);
+		ResultPage resultPage = new ResultPage(driver);
 
-
+		homePage.navigateToFile();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.fileTable))));
+		homePage.uploadFile(fileName);
+//		try {
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("success")));
+//		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("alertError")));
+//		} catch (org.openqa.selenium.TimeoutException e) {
+//			System.out.println("Large File upload failed");alertError
+//		}
+		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
+		wait.until(ExpectedConditions.titleContains("Result"));
+		resultPage.navigateToHomeFromSuccess();
+		wait.until(ExpectedConditions.titleContains("Home"));
+		homePage.navigateToFile();
+		wait.until(ExpectedConditions.visibilityOfElementLocated((By.id(homePage.fileTable))));
+		homePage.dowloadFile();
+	}
 }

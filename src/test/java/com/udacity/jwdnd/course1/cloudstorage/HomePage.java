@@ -11,12 +11,15 @@ public class HomePage {
     @FindBy(id = "nav-files-tab")
     private WebElement filesNavTab;
 
-    @FindBy(id = "buttonFileUpload")
+    @FindBy(id = "fileUpload")
     private WebElement fileUploadButton;
 
     @FindBy(id = "uploadButton")
     private WebElement uploadButton;
 
+
+    @FindBy(id = "button-view-file")
+    private WebElement buttonViewFile;
 
     @FindBy(id = "nav-notes-tab")
     private WebElement notesNavTab;
@@ -68,8 +71,14 @@ public class HomePage {
         PageFactory.initElements(driver,this);
     }
 
-    public void uploadFile(String filename){
+    public void navigateToFile(){
         filesNavTab.click();
+    }
+    public void dowloadFile(){
+        buttonViewFile.click();
+    }
+
+    public void uploadFile(String filename){
         fileUploadButton.sendKeys(new File(filename).getAbsolutePath());
         uploadButton.click();
     }
