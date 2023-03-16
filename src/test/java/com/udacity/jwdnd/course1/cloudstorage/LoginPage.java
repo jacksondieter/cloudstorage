@@ -15,20 +15,20 @@ public class LoginPage {
     @FindBy(id = "buttonLogin")
     private WebElement loginButton;
 
-    @FindBy(id ="alertError")
+    @FindBy(id = "alertError")
     private WebElement errorAlert;
 
-    @FindBy(id ="logoutAlert")
+    @FindBy(id = "logoutAlert")
     private WebElement logoutAlert;
 
-    @FindBy(id ="successMsg")
+    @FindBy(id = "successMsg")
     private WebElement successAlert;
 
     public LoginPage(WebDriver driver) {
-        PageFactory.initElements(driver,this);
+        PageFactory.initElements(driver, this);
     }
 
-    public void loginUser(String username,String password){
+    public void loginUser(String username, String password) {
         usernameField.sendKeys(username);
         passwordField.sendKeys(password);
         loginButton.click();

@@ -67,36 +67,41 @@ public class HomePage {
     public final String noteModal = "noteModal";
     public final String credentialTable = "credentialTable";
     public final String credentialModal = "credentialModal";
+
     public HomePage(WebDriver driver) {
-        PageFactory.initElements(driver,this);
+        PageFactory.initElements(driver, this);
     }
 
-    public void navigateToFile(){
+    public void navigateToFile() {
         filesNavTab.click();
     }
-    public void dowloadFile(){
+
+    public void downloadFile() {
         buttonViewFile.click();
     }
 
-    public void uploadFile(String filename){
+    public void uploadFile(String filename) {
         fileUploadButton.sendKeys(new File(filename).getAbsolutePath());
         uploadButton.click();
     }
 
-    public void navigateToNote(){
+    public void navigateToNote() {
         notesNavTab.click();
     }
 
-    public void addNoteClick(){
+    public void addNoteClick() {
         addNoteButton.click();
     }
-    public void editNoteClick(){
+
+    public void editNoteClick() {
         editNoteButton.click();
     }
-    public void deleteNoteClick(){
+
+    public void deleteNoteClick() {
         deleteNoteButton.click();
     }
-    public void addNote(String title, String description){
+
+    public void addNote(String title, String description) {
         noteTitleField.clear();
         noteTitleField.sendKeys(title);
         noteDescriptionField.clear();
@@ -104,20 +109,23 @@ public class HomePage {
         noteSubmitButton.click();
     }
 
-    public void navigateToCredentials(){
+    public void navigateToCredentials() {
         credentialsNavTab.click();
     }
-    public void addCredentialClick(){
+
+    public void addCredentialClick() {
         addCredentialButton.click();
     }
 
-    public void editCredentialClick(){
+    public void editCredentialClick() {
         editCredentialButton.click();
     }
-    public void deleteCredentialClick(){
+
+    public void deleteCredentialClick() {
         deleteCredentialButton.click();
     }
-    public void addCredential(String url, String username, String password){
+
+    public void addCredential(String url, String username, String password) {
         credentialUrlField.sendKeys(url);
         credentialUsernameField.clear();
         credentialUsernameField.sendKeys(username);

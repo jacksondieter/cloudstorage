@@ -9,20 +9,20 @@ public class ResultPage {
     @FindBy(id = "successHomeLink")
     private WebElement successHomeLink;
 
-    @FindBy(id ="errorHomeLink")
+    @FindBy(id = "errorHomeLink")
     private WebElement errorHomeLink;
 
-    @FindBy(id ="alertError")
+    @FindBy(id = "alertError")
     private WebElement errorAlert;
 
-    @FindBy(id ="success")
+    @FindBy(id = "success")
     private WebElement successAlert;
 
     public ResultPage(WebDriver driver) {
-        PageFactory.initElements(driver,this);
+        PageFactory.initElements(driver, this);
     }
 
-    public void navigateToHomeFromSuccess(){
+    public void navigateToHomeFromSuccess() {
         successHomeLink.click();
     }
 

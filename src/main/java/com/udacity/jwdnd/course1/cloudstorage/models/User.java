@@ -6,7 +6,7 @@ public class User {
     private String password;
     private String firstname;
     private String lastname;
-    private  String salt;
+    private String salt;
 
     public User(Integer userid, String username, String password, String firstname, String lastname, String salt) {
         this.userid = userid;

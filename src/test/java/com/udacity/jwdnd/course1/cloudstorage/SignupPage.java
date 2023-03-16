@@ -19,17 +19,17 @@ public class SignupPage {
     @FindBy(id = "buttonSignUp")
     private WebElement signupButton;
 
-    @FindBy(id ="errorMsg")
+    @FindBy(id = "errorMsg")
     private WebElement errorAlert;
 
-    @FindBy(id ="successMsg")
+    @FindBy(id = "successMsg")
     private WebElement successAlert;
 
     public SignupPage(WebDriver driver) {
-        PageFactory.initElements(driver,this);
+        PageFactory.initElements(driver, this);
     }
 
-    public void signupUser(String firstname,String lastname,String username,String password){
+    public void signupUser(String firstname, String lastname, String username, String password) {
         firstnameField.sendKeys(firstname);
         lastnameField.sendKeys(lastname);
         usernameField.sendKeys(username);

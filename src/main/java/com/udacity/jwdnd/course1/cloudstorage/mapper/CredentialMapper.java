@@ -18,5 +18,5 @@ public interface CredentialMapper {
     boolean update(Credential credential);
 
     @Delete("DELETE FROM CREDENTIALS WHERE userid = #{userid} AND credentialid = #{credentialid}")
-    boolean delete(Integer userid,Integer credentialid);
+    boolean delete(Integer userid, Integer credentialid);
 }

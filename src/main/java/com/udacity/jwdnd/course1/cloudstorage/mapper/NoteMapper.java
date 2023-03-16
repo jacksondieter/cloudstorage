@@ -10,6 +10,9 @@ public interface NoteMapper {
     @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
     ArrayList<Note> getNotes(Integer userid);
 
+    @Select("SELECT * FROM NOTES WHERE userid = #{userid} AND notetitle =  #{notetitle}")
+    Note getNotesByTitle(Integer userid, String notetitle);
+
     @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) VALUES(#{notetitle}, #{notedescription}, #{userid})")
     @Options(useGeneratedKeys = true, keyProperty = "noteid")
     int insert(Note note);
@@ -18,5 +21,5 @@ public interface NoteMapper {
     boolean update(Note note);
 
     @Delete("DELETE FROM NOTES WHERE userid = #{userid} AND noteid = #{noteid}")
-    boolean delete(Integer userid,Integer noteid);
+    boolean delete(Integer userid, Integer noteid);
 }

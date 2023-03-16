@@ -11,24 +11,39 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+
 @ControllerAdvice
 public class ExceptionController {
     @Autowired
     private FileService fileService;
     @Autowired
     private UserService userService;
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public String handleException(MaxUploadSizeExceededException ex, RedirectAttributes redirectAttributes)
-    {
-        User user=null;
+    public String handleException(MaxUploadSizeExceededException ex, RedirectAttributes redirectAttributes) {
+        User user = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!( auth instanceof AnonymousAuthenticationToken)){
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
             user = userService.getUser(auth.getName());
-        }
-        else{
+        } else {
             return "redirect:/login";
         }
-        redirectAttributes.addFlashAttribute("errorMessage", "File too big");
+        redirectAttributes.addFlashAttribute("errorMessage", "Large File upload failed");
+        return "redirect:/result?status=error";
+    }
+
+    @ExceptionHandler(IOException.class)
+    public String handleException(IOException ex, RedirectAttributes redirectAttributes) {
+        User user = null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            user = userService.getUser(auth.getName());
+        } else {
+            return "redirect:/login";
+        }
+        redirectAttributes.addFlashAttribute("errorMessage", "An error occurs. Please try again.");
         return "redirect:/result?status=error";
     }
 }
